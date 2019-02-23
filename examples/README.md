@@ -1,6 +1,6 @@
 # Keras examples directory
 
-## Vision models examples
+## 视觉模型样例 Vision models examples
 
 [mnist_mlp.py](mnist_mlp.py)
 Trains a simple deep multi-layer perceptron on the MNIST dataset.
