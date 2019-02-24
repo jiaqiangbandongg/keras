@@ -1,6 +1,7 @@
-# Keras examples directory
+# Keras样例代码目录 Keras examples directory
 
-## 视觉模型样例 Vision models examples
+深入学习Keras代码，翻译和注释是按照自己习惯拍脑子想的，我看挺舒服的
+## 视觉模型 Vision models examples
 
 [mnist_mlp.py](mnist_mlp.py)
 Trains a simple deep multi-layer perceptron on the MNIST dataset.
@@ -43,7 +44,7 @@ Trains a denoising autoencoder on the MNIST dataset.
 
 ----
 
-## Text & sequences examples
+## 文本和序列 Text & sequences examples
 
 [addition_rnn.py](addition_rnn.py)
 Implementation of sequence to sequence learning for performing addition of two numbers (as strings).
@@ -86,7 +87,7 @@ Trains and evaluate a simple MLP on the Reuters newswire topic classification ta
 
 ----
 
-## Generative models examples
+## 生成模型 Generative models examples
 
 [lstm_text_generation.py](lstm_text_generation.py)
 Generates text from Nietzsche's writings.
@@ -111,7 +112,7 @@ Demonstrates how to build a variational autoencoder with Keras using deconvoluti
 
 ----
 
-## Examples demonstrating specific Keras functionality
+## 演示特定的Keras功能 Examples demonstrating specific Keras functionality
 
 [antirectifier.py](antirectifier.py)
 Demonstrates how to write custom layers for Keras.
