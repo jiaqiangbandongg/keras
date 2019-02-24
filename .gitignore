@@ -22,3 +22,9 @@ examples/img/*
 # developer environments
 .idea
 .vscode
+
+# examples datasets
+examples/fra-eng/*
+
+# model weights
+*.h5

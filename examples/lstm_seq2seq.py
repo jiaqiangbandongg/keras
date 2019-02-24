@@ -54,12 +54,14 @@ from __future__ import print_function
 from keras.models import Model
 from keras.layers import Input, LSTM, Dense
 import numpy as np
+import os
 
 batch_size = 64  # Batch size for training.
 epochs = 100  # Number of epochs to train for.
 latent_dim = 256  # Latent dimensionality of the encoding space.
 num_samples = 10000  # Number of samples to train on.
 # Path to the data txt file on disk.
+# 英语到法语的数据集
 data_path = 'fra-eng/fra.txt'
 
 # Vectorize the data.
@@ -71,11 +73,12 @@ with open(data_path, 'r', encoding='utf-8') as f:
     lines = f.read().split('\n')
 for line in lines[: min(num_samples, len(lines) - 1)]:
     input_text, target_text = line.split('\t')
-    # We use "tab" as the "start sequence" character
-    # for the targets, and "\n" as "end sequence" character.
+    # We use "tab" as the "start sequence" character 用tab当作句子的开始
+    # for the targets, and "\n" as "end sequence" character. 用\n当作句子的结束
     target_text = '\t' + target_text + '\n'
     input_texts.append(input_text)
     target_texts.append(target_text)
+    # 分别将输入和目标中出现过的字符汇总，构建字符表
     for char in input_text:
         if char not in input_characters:
             input_characters.add(char)
@@ -83,10 +86,13 @@ for line in lines[: min(num_samples, len(lines) - 1)]:
         if char not in target_characters:
             target_characters.add(char)
 
+# 字符表由集合变为有序列表
 input_characters = sorted(list(input_characters))
 target_characters = sorted(list(target_characters))
+# 字符表中字符个数
 num_encoder_tokens = len(input_characters)
 num_decoder_tokens = len(target_characters)
+# 最大句子长度
 max_encoder_seq_length = max([len(txt) for txt in input_texts])
 max_decoder_seq_length = max([len(txt) for txt in target_texts])
 
@@ -144,16 +150,21 @@ decoder_outputs = decoder_dense(decoder_outputs)
 # `encoder_input_data` & `decoder_input_data` into `decoder_target_data`
 model = Model([encoder_inputs, decoder_inputs], decoder_outputs)
 
-# Run training
-model.compile(optimizer='rmsprop', loss='categorical_crossentropy')
-model.fit([encoder_input_data, decoder_input_data], decoder_target_data,
-          batch_size=batch_size,
-          epochs=epochs,
-          validation_split=0.2)
-# Save model
-model.save('s2s.h5')
+# 如果还没训练 就训练下 顺带生成个权重文件
+if not os.path.exists('s2s.h5'):
+    # Run training
+    model.compile(optimizer='rmsprop', loss='categorical_crossentropy')
+    model.fit([encoder_input_data, decoder_input_data], decoder_target_data,
+            batch_size=batch_size,
+            epochs=epochs,
+            validation_split=0.2)
+    # Save model
+    model.save('s2s.h5')
+# 训练过的就直接读取权重吧
+else:
+    model.load_weights('s2s.h5')
 
-# Next: inference mode (sampling).
+# Next: inference mode (sampling). 下面是推理模式
 # Here's the drill:
 # 1) encode input and retrieve initial decoder state
 # 2) run one step of decoder with this initial state
